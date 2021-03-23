@@ -92,6 +92,7 @@ public class Register extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // On successful registration, make text password entry portion invisible and color entry portion visible
                             mYellow.setVisibility(View.VISIBLE);
                             mRed.setVisibility(View.VISIBLE);
                             mBlue.setVisibility(View.VISIBLE);
@@ -114,6 +115,7 @@ public class Register extends AppCompatActivity {
                   });
         }
     });
+        // Each button adds a color signifier to the string representing the color entry code
         mOrange.setOnClickListener(new View.OnClickListener() {
                                        @Override
                                        public void onClick(View v) {
@@ -156,12 +158,14 @@ public class Register extends AppCompatActivity {
                 //mViolet.setVisibility(View.INVISIBLE);
             }
         });
+        // On "Already Registered? Login Here" click, switch to the login page
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(),Login.class));
             }
         });
+        // On "Register" click, store color code string in Firestore using UserID, then load main page
         mRegisterBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

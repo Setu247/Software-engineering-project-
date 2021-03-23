@@ -77,7 +77,8 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(Login.this, "Success!", Toast.LENGTH_SHORT).show();
+                            // On successful authentication, make text password entry portion invisible and color entry portion visible
+                            Toast.makeText(Login.this, "Email/Password Success!", Toast.LENGTH_SHORT).show();
                             mYellow.setVisibility(View.VISIBLE);
                             mRed.setVisibility(View.VISIBLE);
                             mBlue.setVisibility(View.VISIBLE);
@@ -96,13 +97,14 @@ public class Login extends AppCompatActivity {
                 });
             }
         });
-
+        // On "New Here? Create Account" click, switch to registration page
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(getApplicationContext(),Register.class));
             }
         });
+        // Each button adds a color signifier to the string representing the proposed color entry code
         mOrange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,6 +147,7 @@ public class Login extends AppCompatActivity {
                 //mViolet.setVisibility(View.INVISIBLE);
             }
         });
+        // On "Login" click, load the main page
         mLoginBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
