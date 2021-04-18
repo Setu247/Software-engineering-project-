@@ -13,9 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -23,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Register extends AppCompatActivity {
-    EditText mFullName,mEmail,mPassword;
+    EditText mFullName, mEmail, mPassword;
     Button mRegisterBtn;
     Button mRed;
     Button mBlue;
@@ -37,30 +40,32 @@ public class Register extends AppCompatActivity {
     FirebaseFirestore fStore;
     String userID;
     String colorCode;
+    TextView text1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        mFullName   = findViewById(R.id.fullName);
-        mEmail      = findViewById(R.id.email);
-        mPassword   = findViewById(R.id.textPassword);
-        mRegisterBtn= findViewById(R.id.regButton);
-        mRegisterBtn2= findViewById(R.id.regButton2);
-        mRed= findViewById(R.id.red);
-        mBlue= findViewById(R.id.blue);
-        mOrange= findViewById(R.id.orange);
-        mViolet= findViewById(R.id.violet);
-        mYellow= findViewById(R.id.yellow);
-        mGreen= findViewById(R.id.green);
-        mLoginBtn   = findViewById(R.id.loginText);
+        mFullName = findViewById(R.id.fullName);
+        mEmail = findViewById(R.id.email);
+        mPassword = findViewById(R.id.textPassword);
+        mRegisterBtn = findViewById(R.id.regButton);
+        mRegisterBtn2 = findViewById(R.id.regButton2);
+        mRed = findViewById(R.id.red);
+        mBlue = findViewById(R.id.blue);
+        mOrange = findViewById(R.id.orange);
+        mViolet = findViewById(R.id.violet);
+        mYellow = findViewById(R.id.yellow);
+        mGreen = findViewById(R.id.green);
+        mLoginBtn = findViewById(R.id.loginText);
+        text1 = (TextView) findViewById(R.id.text1);
 
         fAuth = FirebaseAuth.getInstance();
 
         // Check to see if user is already logged in
-        if(fAuth.getCurrentUser() != null){
-            startActivity(new Intent(getApplicationContext(),MainActivity.class));
+        if (fAuth.getCurrentUser() != null) {
+            startActivity(new Intent(getApplicationContext(), MainActivity.class));
             finish();
         }
 
@@ -72,23 +77,23 @@ public class Register extends AppCompatActivity {
                 String password = mPassword.getText().toString().trim();
                 String fullName = mFullName.getText().toString();
 
-                if(TextUtils.isEmpty(email)){
+                if (TextUtils.isEmpty(email)) {
                     mEmail.setError("Email is required.");
                     return;
                 }
 
-                if(TextUtils.isEmpty(password)){
+                if (TextUtils.isEmpty(password)) {
                     mPassword.setError("Password is required.");
                     return;
                 }
 
-                if(password.length() < 6){
+                if (password.length() < 6) {
                     mPassword.setError("Password must be at least six characters.");
                 }
 
                 // Register user in Firebase
 
-                fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                fAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
@@ -112,69 +117,98 @@ public class Register extends AppCompatActivity {
                     }
 
 
-                  });
-        }
-    });
+                });
+            }
+        });
         // Each button adds a color signifier to the string representing the color entry code
         mOrange.setOnClickListener(new View.OnClickListener() {
-                                       @Override
-                                       public void onClick(View v) {
-                                           colorCode = colorCode + 'o';
-                                           //mOrange.setVisibility(View.INVISIBLE);
-                                       }
-                                   });
+            @Override
+            public void onClick(View view) {
+                if (text1.getText().equals("ABC")) {
+                    text1.setText("");
+                }
+
+                text1.append("O");
+            }
+        });
         mGreen.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                colorCode = colorCode + 'g';
-                //mGreen.setVisibility(View.INVISIBLE);
+            public void onClick(View view) {
+                if (text1.getText().equals("ABC")) {
+                    text1.setText("");
+                }
+
+                text1.append("G");
             }
         });
         mRed.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                colorCode = colorCode + 'r';
-                //mRed.setVisibility(View.INVISIBLE);
+            public void onClick(View view) {
+                if (text1.getText().equals("ABC")) {
+                    text1.setText("");
+                }
+
+                text1.append("R");
             }
         });
         mYellow.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                colorCode = colorCode + 'y';
-                //mYellow.setVisibility(View.INVISIBLE);
+            public void onClick(View view) {
+                if (text1.getText().equals("ABC")) {
+                    text1.setText("");
+                }
+
+                text1.append("Y");
             }
         });
         mBlue.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                colorCode = colorCode + 'b';
-                //mBlue.setVisibility(View.INVISIBLE);
+            public void onClick(View view) {
+                if (text1.getText().equals("ABC")) {
+                    text1.setText("");
+                }
+
+                text1.append("B");
             }
         });
         mViolet.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                colorCode = colorCode + 'v';
-                //mViolet.setVisibility(View.INVISIBLE);
+            public void onClick(View view) {
+                if (text1.getText().equals("ABC")) {
+                    text1.setText("");
+                }
+
+                text1.append("V");
             }
         });
         // On "Already Registered? Login Here" click, switch to the login page
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),Login.class));
+                startActivity(new Intent(getApplicationContext(), Login.class));
             }
         });
         // On "Register" click, store color code string in Firestore using UserID, then load main page
         mRegisterBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                userID = fAuth.getCurrentUser().getUid();
-                DocumentReference documentReference = fStore.collection("users").document(userID);
-                Map<String,Object> user = new HashMap<>();
-                user.put("colorCode",colorCode);
-                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+            public void onClick(View view) {
+                FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid()).child("Level2Pin").setValue(text1.getText().toString()).
+                        addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+
+                                Toast.makeText(Register.this, "Registered", Toast.LENGTH_SHORT).show();
+
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+
+                        Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
-}
+
+    }
 }

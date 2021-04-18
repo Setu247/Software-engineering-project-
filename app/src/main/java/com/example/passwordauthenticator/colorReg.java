@@ -12,7 +12,7 @@ public class colorReg extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_colorreg);
 
-        colors = "12345";
+        colors = "";
     }
 
 }

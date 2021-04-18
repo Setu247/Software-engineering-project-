@@ -16,6 +16,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class Login extends AppCompatActivity {
     EditText mEmail, mPassword;
@@ -30,6 +38,7 @@ public class Login extends AppCompatActivity {
     Button mOrange;
     Button mYellow;
     String colorCode;
+
 
 
     @Override
@@ -49,6 +58,7 @@ public class Login extends AppCompatActivity {
         mLoginBtn = findViewById(R.id.regButton);
         mLoginBtn2 = findViewById(R.id.login2);
         mCreateBtn = findViewById(R.id.loginText);
+        final TextView text1 = (TextView)findViewById(R.id.text1);
 
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,50 +118,95 @@ public class Login extends AppCompatActivity {
         mOrange.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCode = colorCode + 'o';
-                //mOrange.setVisibility(View.INVISIBLE);
+                if (text1.getText().equals("ABC"))
+                {
+                    text1.setText("");
+                }
+                text1.append("O");
             }
         });
         mGreen.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCode = colorCode + 'g';
-                //mGreen.setVisibility(View.INVISIBLE);
+                if (text1.getText().equals("ABC"))
+                {
+                    text1.setText("");
+                }
+                text1.append("G");
             }
         });
         mRed.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCode = colorCode + 'r';
-                //mRed.setVisibility(View.INVISIBLE);
+                if (text1.getText().equals("ABC"))
+                {
+                    text1.setText("");
+                }
+                text1.append("R");
             }
         });
         mYellow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCode = colorCode + 'y';
-                //mYellow.setVisibility(View.INVISIBLE);
+                if (text1.getText().equals("ABC"))
+                {
+                    text1.setText("");
+                }
+                text1.append("Y");
             }
         });
         mBlue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCode = colorCode + 'b';
-               //mBlue.setVisibility(View.INVISIBLE);
+                if (text1.getText().equals("ABC"))
+                {
+                    text1.setText("");
+                }
+                text1.append("B");
             }
         });
         mViolet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                colorCode = colorCode + 'v';
-                //mViolet.setVisibility(View.INVISIBLE);
+                if (text1.getText().equals("ABC"))
+                {
+                    text1.setText("");
+                }
+                text1.append("V");
             }
         });
         // On "Login" click, load the main page
         mLoginBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),MainActivity.class));
+
+                //TODO: Firebase waale se compare karana hai text1 and if paasses go on next slide
+
+                FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if (dataSnapshot != null){
+                                    Map<String , Object> map = (HashMap<String, Object>)dataSnapshot.getValue();
+                                    if (map != null){
+                                        if (text1.getText().toString().equals(map.get("Level2Pin"))){
+                                            Toast.makeText(Login.this, "Ok", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                        else {
+                                            Toast.makeText(Login.this, "Wrong Pin", Toast.LENGTH_SHORT).show();
+                                            text1.setText("");
+                                        }
+                                    }
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                            }
+                        });
+
             }
         });
     }
