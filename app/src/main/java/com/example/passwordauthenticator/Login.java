@@ -38,6 +38,10 @@ public class Login extends AppCompatActivity {
     Button mOrange;
     Button mYellow;
     String colorCode;
+    private FirebaseAuth mAuth;
+    // UI references./
+    private EditText mEmailView;
+    private EditText mPasswordView;
 
 
 
@@ -60,9 +64,11 @@ public class Login extends AppCompatActivity {
         mCreateBtn = findViewById(R.id.loginText);
         final TextView text1 = (TextView)findViewById(R.id.text1);
 
+
         mLoginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 // Receive and enforce requirements for email and password entries
                 String email = mEmail.getText().toString().trim();
                 String password = mPassword.getText().toString().trim();
@@ -84,11 +90,12 @@ public class Login extends AppCompatActivity {
                 // Authenticate user credentials
 
                 fAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // On successful authentication, make text password entry portion invisible and color entry portion visible
-                            Toast.makeText(Login.this, "Email/Password Success!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "Textual Login Success!", Toast.LENGTH_SHORT).show();
                             mYellow.setVisibility(View.VISIBLE);
                             mRed.setVisibility(View.VISIBLE);
                             mBlue.setVisibility(View.VISIBLE);
@@ -100,8 +107,10 @@ public class Login extends AppCompatActivity {
                             mPassword.setVisibility(View.INVISIBLE);
                             mLoginBtn2.setVisibility(View.VISIBLE);
                             mCreateBtn.setVisibility(View.INVISIBLE);
+                            text1.setVisibility(View.VISIBLE);
+
                         } else {
-                            Toast.makeText(Login.this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Login.this, "Error! You are not registered or have entered the wrong user credentials", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -111,6 +120,7 @@ public class Login extends AppCompatActivity {
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 startActivity(new Intent(getApplicationContext(),Register.class));
             }
         });
@@ -175,12 +185,13 @@ public class Login extends AppCompatActivity {
                 text1.append("V");
             }
         });
+
+
         // On "Login" click, load the main page
         mLoginBtn2.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
-
-                //TODO: Firebase waale se compare karana hai text1 and if paasses go on next slide
 
                 FirebaseDatabase.getInstance().getReference().child("Users").child(FirebaseAuth.getInstance().getUid())
                         .addValueEventListener(new ValueEventListener() {
@@ -191,7 +202,6 @@ public class Login extends AppCompatActivity {
                                     if (map != null){
                                         if (text1.getText().toString().equals(map.get("Level2Pin"))){
                                             Toast.makeText(Login.this, "Ok", Toast.LENGTH_SHORT).show();
-
                                         }
                                         else {
                                             Toast.makeText(Login.this, "Wrong Pin", Toast.LENGTH_SHORT).show();
@@ -206,7 +216,6 @@ public class Login extends AppCompatActivity {
 
                             }
                         });
-
             }
         });
     }
